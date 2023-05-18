@@ -1,11 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
 import css from './Form.module.css';
-import { getContacts } from 'redux/selectors';
+import { selectContacts } from 'redux/selectors';
 import { addContact } from 'redux/contactsSlice';
 
 export function Form() {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(selectContacts);
 
   const checkingForMatches = value => {
     return contacts.some(el => el.name.toLowerCase() === value.toLowerCase());

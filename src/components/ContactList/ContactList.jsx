@@ -7,14 +7,14 @@ import {
 } from '../../redux/contactsSlice';
 
 export function ContactList() {
-  const { data = [], isError } = useFetchContactsQuery();
+  const { data = [] } = useFetchContactsQuery();
 
   const filter = useSelector(selectContactFilter);
   const filteredContacts = data.filter(contact =>
     contact.name.toLowerCase().includes(filter)
   );
 
-  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
+  const [deleteContact] = useDeleteContactMutation();
   const handleDelete = async id => {
     try {
       await deleteContact(id);
@@ -32,7 +32,7 @@ export function ContactList() {
             <span className={css.contactNumber}>{phone}</span>
             <button
               className={css.contactButton}
-              onClick={() => deleteContact(id)}
+              onClick={() => handleDelete(id)}
             >
               Delete
             </button>

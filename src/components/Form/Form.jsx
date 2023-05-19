@@ -36,6 +36,10 @@ export function Form() {
       return;
     }
     addContact({ name: name, number: number });
+    if (error) {
+      alert(error.message);
+      return;
+    }
     formReset();
   };
 

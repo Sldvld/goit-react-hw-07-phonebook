@@ -1,34 +1,33 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { deleteContact } from 'redux/contactsSlice';
-// import { getContactFilter } from 'redux/selectors';
-import * as contactsOperations from '../../redux/contactsOperation';
-import * as contactsSelectors from '../../redux/selectors';
+import { selectContactFilter } from 'redux/selectors';
 import css from './ContactList.module.css';
+import {
+  useFetchContactsQuery,
+  useDeleteContactMutation,
+} from '../../redux/contactsSlice';
 
 export function ContactList() {
-  const dispatch = useDispatch();
-  const contacts = useSelector(contactsSelectors.selectContacts);
-  // const filter = useSelector(getContactFilter);
+  const { data = [], isError } = useFetchContactsQuery();
 
-  // const filteredContacts = contacts.filter(contact =>
-  //   contact.name.toLowerCase().includes(filter.toLowerCase())
-  // );
+  const filter = useSelector(selectContactFilter);
 
-  useEffect(() => {
-    dispatch(contactsOperations.fetchContacts());
-  }, [dispatch]);
+  const [deleteContsct, { isLoading }] = useDeleteContactMutation();
+
+  const filteredContacts = data.filter(contact =>
+    contact.name.toLowerCase().includes(filter)
+  );
 
   return (
     <ul className={css.contactList}>
-      {contacts.map(({ id, name, phone }) => {
+      {filteredContacts.map(({ id, name, phone }) => {
         return (
           <li className={css.contactItem} key={id}>
             <span className={css.contactName}>{name}</span>
             <span className={css.contactNumber}>{phone}</span>
             <button
               className={css.contactButton}
-              onClick={() => dispatch(deleteContact(id))}
+              onClick={() => deleteContsct(id)}
             >
               Delete
             </button>

@@ -1,13 +1,18 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { getContactFilter } from 'redux/selectors';
-import { setContactFilter } from 'redux/filterSlice';
+import { selectContactFilter } from 'redux/selectors';
+import { setContactFilter } from '../../redux/filterSlice';
 import React from 'react';
 
 import css from './Filter.module.css';
 
 export function Filter() {
+  const filter = useSelector(selectContactFilter);
   const dispatch = useDispatch();
-  const filter = useSelector(getContactFilter);
+
+  const handleFilter = evt => {
+    const { value } = evt.currentTarget;
+    dispatch(setContactFilter(value.toLowerCase()));
+  };
 
   return (
     <>
@@ -17,9 +22,7 @@ export function Filter() {
         name="filter"
         type="text"
         value={filter}
-        onChange={event =>
-          dispatch(setContactFilter(event.currentTarget.value))
-        }
+        onChange={handleFilter}
         placeholder="Search..."
       />
     </>

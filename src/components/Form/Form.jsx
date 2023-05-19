@@ -1,29 +1,42 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
 import css from './Form.module.css';
-import { selectContacts } from 'redux/selectors';
-import { addContact } from 'redux/contactsSlice';
+import {
+  useCreateContactMutation,
+  useFetchContactsQuery,
+} from 'redux/contactsSlice';
 
 export function Form() {
-  const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const { data: contacts } = useFetchContactsQuery();
+  const [addContact, { error }] = useCreateContactMutation();
 
-  const checkingForMatches = value => {
-    return contacts.some(el => el.name.toLowerCase() === value.toLowerCase());
+  const formReset = () => {
+    setName('');
+    setNumber('');
+  };
+
+  const inputChangeHandlerName = evt => {
+    setName(evt.currentTarget.value);
+  };
+
+  const inputChangeHandlerNumber = evt => {
+    setNumber(evt.currentTarget.value);
   };
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    const {
-      target: { name, number },
-    } = evt;
 
-    if (checkingForMatches(name.value)) {
-      alert(`${name.value} is already in contacts`);
+    const isNameExists = contacts.some(
+      contact => contact.name?.toLowerCase() === name.toLowerCase()
+    );
+
+    if (isNameExists) {
+      alert(`${name} is already in contacts`);
       return;
     }
-    dispatch(addContact(name.value, number.value));
-    name.value = '';
-    number.value = '';
+    addContact({ name: name, number: number });
+    formReset();
   };
 
   return (
@@ -41,6 +54,7 @@ export function Form() {
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
+          onChange={inputChangeHandlerName}
         />
         <label htmlFor="number" className={css.formLabel}>
           Number
@@ -54,6 +68,7 @@ export function Form() {
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
+          onChange={inputChangeHandlerNumber}
         />
 
         <button type="submit" className={css.formButton}>

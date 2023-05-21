@@ -1,6 +1,8 @@
-import { useSelector } from 'react-redux';
 import { selectContactFilter } from 'redux/selectors';
+import { useSelector } from 'react-redux';
 import css from './ContactList.module.css';
+import Loader from '../Loader/Loader';
+import Notiflix from 'notiflix';
 import {
   useFetchContactsQuery,
   useDeleteContactMutation,
@@ -14,12 +16,13 @@ export function ContactList() {
     contact.name.toLowerCase().includes(filter)
   );
 
-  const [deleteContact] = useDeleteContactMutation();
+  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
   const handleDelete = async id => {
     try {
       await deleteContact(id);
+      Notiflix.Notify.success('The contact has been deleted');
     } catch (error) {
-      console.log(error);
+      Notiflix.Notify.failure(error);
     }
   };
 
@@ -31,10 +34,13 @@ export function ContactList() {
             <span className={css.contactName}>{name}</span>
             <span className={css.contactNumber}>{phone}</span>
             <button
-              className={css.contactButton}
+              className={`${css.contactButton} ${
+                isDeleting ? css.disabledButton : ''
+              }`}
               onClick={() => handleDelete(id)}
+              disabled={isDeleting}
             >
-              Delete
+              {isDeleting ? <Loader /> : 'Delete'}
             </button>
           </li>
         );

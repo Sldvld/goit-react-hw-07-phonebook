@@ -8,7 +8,7 @@ export default function BigLoader() {
         strokeColor="grey"
         strokeWidth="5"
         animationDuration="0.75"
-        width="96"
+        width="100"
         visible={true}
       />
     </div>

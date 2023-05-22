@@ -1,16 +1,16 @@
-import { MagnifyingGlass } from 'react-loader-spinner';
+import { RotatingLines } from 'react-loader-spinner';
+import css from './Loader.module.css';
 
 export default function BigLoader() {
   return (
-    <MagnifyingGlass
-      visible={true}
-      height="200"
-      width="200"
-      ariaLabel="MagnifyingGlass-loading"
-      wrapperStyle={{}}
-      wrapperClass="MagnifyingGlass-wrapper"
-      glassColor="#c0efff"
-      color="#e15b64"
-    />
+    <div className={css.wrapper}>
+      <RotatingLines
+        strokeColor="grey"
+        strokeWidth="5"
+        animationDuration="0.75"
+        width="96"
+        visible={true}
+      />
+    </div>
   );
 }

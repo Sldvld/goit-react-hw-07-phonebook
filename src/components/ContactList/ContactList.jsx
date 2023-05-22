@@ -10,13 +10,13 @@ import {
 
 export function ContactList() {
   const { data = [] } = useFetchContactsQuery();
-
+  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
   const filter = useSelector(selectContactFilter);
+
   const filteredContacts = data.filter(contact =>
     contact.name.toLowerCase().includes(filter)
   );
 
-  const [deleteContact, { isLoading: isDeleting }] = useDeleteContactMutation();
   const handleDelete = async id => {
     try {
       await deleteContact(id);

@@ -31,7 +31,7 @@ export function Form() {
 
     const {
       name: { value: name },
-      number: { value: number },
+      number: { value: phone },
     } = evt.currentTarget.elements;
 
     const isNameExists = contacts.some(
@@ -44,7 +44,7 @@ export function Form() {
     }
 
     try {
-      await addContact({ name: name, number: number });
+      await addContact({ name: name, phone: phone });
 
       if (error) {
         Notiflix.Notify.failure(error.message);
